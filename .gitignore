@@ -1,0 +1,21 @@
+# --- .NET build artifacts ---
+bin/
+obj/
+
+# --- Node / frontend build artifacts ---
+node_modules/
+dist/
+.vite/
+
+# --- IDE та локальні налаштування ---
+.vs/
+.vscode/
+*.user
+*.suo
+
+# --- Локальні інструменти розробника ---
+.claude/
+.clinerules
+CLAUDE.md
+.mcp.json
+init-git-history.ps1
