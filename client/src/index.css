@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-zinc-50 text-zinc-900 font-sans antialiased dark:bg-zinc-950 dark:text-zinc-100;
+}
+
+/*
+ * Щільність таблиць: клас density-compact на <html> зменшує вертикальні відступи
+ * в усіх таблицях, не чіпаючи кожну розмітку окремо.
+ */
+.density-compact table th,
+.density-compact table td {
+  padding-top: 0.375rem !important;
+  padding-bottom: 0.375rem !important;
+}
+
+.density-compact table td {
+  font-size: 0.8125rem;
+}
