@@ -20,4 +20,9 @@ public interface IScheduleService
 
     Task<ScheduleSlotDto?> UpdateAsync(int id, ScheduleSlotCreateUpdateDto dto);
     Task<bool> DeleteAsync(int id);
+
+    /// <summary>
+    /// Клонує слоти тижня на +7 днів. Конфліктні слоти пропускаються без падіння операції.
+    /// </summary>
+    Task<CloneWeekResultDto> CloneWeekAsync(DateTime weekStartDate, int? trainerId = null);
 }

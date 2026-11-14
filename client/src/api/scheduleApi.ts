@@ -3,6 +3,7 @@ import type {
   ScheduleSlot,
   ScheduleSlotCreateUpdate,
   ScheduleValidationResult,
+  CloneWeekResult,
 } from '../types/schedule';
 
 export const scheduleApi = {
@@ -40,5 +41,11 @@ export const scheduleApi = {
 
   delete: async (id: number): Promise<void> => {
     await axiosClient.delete(`/schedule/${id}`);
+  },
+
+  /** Клонує всі слоти тижня (Admin) або власні слоти тренера (Trainer) на +7 днів. */
+  cloneWeek: async (weekStartDate: string, trainerId?: number): Promise<CloneWeekResult> => {
+    const { data } = await axiosClient.post('/schedule/clone-week', { weekStartDate, trainerId });
+    return data;
   },
 };

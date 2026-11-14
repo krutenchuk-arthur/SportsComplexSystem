@@ -29,7 +29,7 @@ export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage
         <tbody>
           {equipment.map((item) => (
             <tr key={item.id} className="border-b border-zinc-200 dark:border-zinc-800 last:border-b-0 hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
-              <td className="p-4 font-mono text-xs text-orange-600 dark:text-orange-500">{item.inventoryNumber}</td>
+              <td className="p-4 font-mono text-xs text-rose-600 dark:text-rose-500">{item.inventoryNumber}</td>
               <td className="p-4 text-zinc-900 dark:text-zinc-100 font-medium">{item.name}</td>
               <td className="p-4 text-zinc-500 dark:text-zinc-400 text-xs">
                 <span className="flex items-center gap-1.5">
@@ -62,7 +62,7 @@ export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage
                   {onEdit && <button
                     onClick={() => onEdit(item)}
                     title="Редагувати"
-                    className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-orange-600 dark:hover:text-orange-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                   >
                     <Pencil size={16} />
                   </button>}

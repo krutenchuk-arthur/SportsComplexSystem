@@ -25,25 +25,25 @@ export default function KpiGrid({ kpi, loading }: KpiGridProps) {
         icon={Activity}
         label="Загальна завантаженість тренерів"
         value={`${kpi.overallLoadPercentage.toFixed(1)}%`}
-        accentColor="text-orange-600 dark:text-orange-500"
+        accentColor="text-rose-600 dark:text-rose-500"
       />
       <KpiCard
         icon={CalendarCheck}
         label="Активні тренування сьогодні"
         value={kpi.activeTrainingsToday}
-        accentColor="text-orange-600 dark:text-orange-500"
+        accentColor="text-rose-600 dark:text-rose-500"
       />
       <KpiCard
         icon={Dumbbell}
         label="Інвентар у роботі / на ТО"
         value={`${kpi.equipmentInService} / ${kpi.equipmentOnMaintenance}`}
-        accentColor="text-orange-600 dark:text-orange-500"
+        accentColor="text-rose-600 dark:text-rose-500"
       />
       <KpiCard
         icon={Wrench}
         label="Відкриті заявки на ремонт"
         value={kpi.openTicketsCount}
-        accentColor="text-orange-600 dark:text-orange-500"
+        accentColor="text-rose-600 dark:text-rose-500"
       />
     </div>
   );

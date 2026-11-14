@@ -97,19 +97,37 @@ public class EquipmentService : IEquipmentService
 
         equipment.CurrentUsageHours += hours;
 
-        if (equipment.CurrentUsageHours >= equipment.MaintenanceThresholdHours &&
-            equipment.Status == EquipmentStatus.Operational)
+        // Відсоток зносу та пороги з глобальних налаштувань комплексу
+        var settings = await _settings.GetAsync();
+        var wearPercentage = equipment.MaintenanceThresholdHours > 0
+            ? (equipment.CurrentUsageHours / equipment.MaintenanceThresholdHours) * 100
+            : (equipment.CurrentUsageHours > 0 ? 100 : 0);
+
+        var thresholdReached = equipment.CurrentUsageHours >= equipment.MaintenanceThresholdHours;
+        var warningReached = wearPercentage >= settings.WarningWearPercentage;
+
+        if (thresholdReached && equipment.Status == EquipmentStatus.Operational)
         {
             equipment.Status = EquipmentStatus.MaintenanceRequired;
+        }
 
-            _context.MaintenanceTickets.Add(new MaintenanceTicket
+        if (thresholdReached || warningReached)
+        {
+            // Не дублюємо заявку, якщо для обладнання вже є активна (Open / InProgress)
+            var hasActiveTicket = await _context.MaintenanceTickets.AnyAsync(t =>
+                t.EquipmentId == equipment.Id &&
+                (t.Status == TicketStatus.Open || t.Status == TicketStatus.InProgress));
+
+            if (!hasActiveTicket)
             {
-                EquipmentId = equipment.Id,
-                Status = TicketStatus.Open,
-                Description = $"Перевищено ліміт напрацювання {equipment.MaintenanceThresholdHours:0.#} год " +
-                               $"(поточне напрацювання: {equipment.CurrentUsageHours:0.#} год).",
-                CreatedAt = DateTime.UtcNow
-            });
+                _context.MaintenanceTickets.Add(new MaintenanceTicket
+                {
+                    EquipmentId = equipment.Id,
+                    Status = TicketStatus.Open,
+                    Description = $"Автоматична заявка: досягнуто поріг зносу інвентарю ({wearPercentage:0.#}%)",
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
         }
 
         await _context.SaveChangesAsync();

@@ -100,4 +100,29 @@ public class ScheduleController : ControllerBase
         var deleted = await _service.DeleteAsync(id);
         return deleted ? NoContent() : NotFound();
     }
+
+    /// <summary>
+    /// Клонує тиждень на наступний (+7 днів).
+    /// Admin може клонувати всі слоти або лише вибраного тренера;
+    /// Trainer — виключно власні заняття (TrainerId береться з токена).
+    /// </summary>
+    [HttpPost("clone-week")]
+    [Authorize(Roles = "Admin,Trainer")]
+    public async Task<ActionResult<CloneWeekResultDto>> CloneWeek(CloneWeekRequestDto dto)
+    {
+        if (dto.WeekStartDate == null)
+            return BadRequest(new { message = "Передайте weekStartDate — будь-яку дату тижня-джерела." });
+
+        int? trainerId = dto.TrainerId;
+
+        if (User.IsInRole("Trainer"))
+        {
+            var claim = User.FindFirst(TokenService.TrainerIdClaim)?.Value;
+            if (!int.TryParse(claim, out var ownTrainerId)) return ForbiddenSlot();
+            trainerId = ownTrainerId;
+        }
+
+        var result = await _service.CloneWeekAsync(dto.WeekStartDate.Value, trainerId);
+        return Ok(result);
+    }
 }

@@ -45,7 +45,7 @@ export default function AddUsageHoursModal({ isOpen, onClose, onSubmit, equipmen
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-300 dark:border-zinc-700 rounded-lg p-4">
           <p className="text-sm text-zinc-900 dark:text-zinc-100 font-medium">{equipment.name}</p>
-          <p className="text-xs font-mono text-orange-600 dark:text-orange-500 mt-0.5">{equipment.inventoryNumber}</p>
+          <p className="text-xs font-mono text-rose-600 dark:text-rose-500 mt-0.5">{equipment.inventoryNumber}</p>
           <div className="mt-3">
             <ProgressBar
               value={equipment.currentUsageHours}
@@ -64,7 +64,7 @@ export default function AddUsageHoursModal({ isOpen, onClose, onSubmit, equipmen
             required
             value={hours}
             onChange={(e) => setHours(Number(e.target.value))}
-            className="w-full px-3 py-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-orange-600"
+            className="w-full px-3 py-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-rose-600"
           />
         </div>
 
@@ -85,7 +85,7 @@ export default function AddUsageHoursModal({ isOpen, onClose, onSubmit, equipmen
           <button
             type="submit"
             disabled={submitting}
-            className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white font-medium transition-colors disabled:opacity-50"
           >
             {submitting ? 'Збереження...' : 'Нарахувати'}
           </button>

@@ -14,7 +14,7 @@ export default function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   return (
     <aside className="w-60 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 flex flex-col shrink-0">
       <div className="h-14 flex items-center gap-2.5 px-5 border-b border-zinc-200 dark:border-zinc-800">
-        <div className="w-7 h-7 rounded-md bg-orange-600 flex items-center justify-center">
+        <div className="w-7 h-7 rounded-md bg-rose-600 dark:bg-rose-500 flex items-center justify-center">
           <Activity size={16} className="text-white" />
         </div>
         <div className="min-w-0">
@@ -35,7 +35,7 @@ export default function Sidebar({ activeTab, onTabChange }: SidebarProps) {
               onClick={() => onTabChange(item.id)}
               className={`w-full flex items-center gap-3 text-left px-3 py-2 rounded-md text-sm font-medium transition-colors border-l-2 ${
                 isActive
-                  ? 'border-orange-600 bg-orange-50 text-orange-700 dark:bg-orange-600/10 dark:text-orange-500'
+                  ? 'border-rose-600 bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-500'
                   : 'border-transparent text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100'
               }`}
             >

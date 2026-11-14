@@ -40,7 +40,7 @@ export default function MaintenanceKanban({ tickets, onUpdateStatus }: Maintenan
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{ticket.equipmentName}</p>
-                      <p className="text-xs font-mono text-orange-600 dark:text-orange-500">{ticket.equipmentInventoryNumber}</p>
+                      <p className="text-xs font-mono text-rose-600 dark:text-rose-500">{ticket.equipmentInventoryNumber}</p>
                     </div>
                     <span className="text-[10px] font-mono text-zinc-500">#{ticket.id}</span>
                   </div>
@@ -54,7 +54,7 @@ export default function MaintenanceKanban({ tickets, onUpdateStatus }: Maintenan
                   {onUpdateStatus && ticket.status === 'Open' && (
                     <button
                       onClick={() => onUpdateStatus(ticket.id, 'InProgress')}
-                      className="mt-2 w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white text-xs font-medium transition-colors"
+                      className="mt-2 w-full flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white text-xs font-medium transition-colors"
                     >
                       <Play size={12} /> Взяти в роботу
                     </button>

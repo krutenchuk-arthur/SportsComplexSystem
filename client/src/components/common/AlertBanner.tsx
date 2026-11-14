@@ -45,7 +45,7 @@ export default function AlertBanner({ conflicts, suggestedTrainer, onUseSuggeste
           {onUseSuggested && (
             <button
               onClick={() => onUseSuggested(suggestedTrainer.id)}
-              className="text-xs font-medium px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white transition-colors"
+              className="text-xs font-medium px-3 py-1.5 rounded-lg bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white transition-colors"
             >
               Призначити
             </button>

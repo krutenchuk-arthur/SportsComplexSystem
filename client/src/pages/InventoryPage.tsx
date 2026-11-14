@@ -65,7 +65,7 @@ export default function InventoryPage() {
         {hasRole('Trainer') && (
           <button
             onClick={() => setIsReportOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-orange-600 text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-600/10 font-medium text-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-rose-600 text-rose-600 dark:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 font-medium text-sm transition-colors"
           >
             <AlertOctagon size={16} />
             Повідомити про поломку
@@ -77,7 +77,7 @@ export default function InventoryPage() {
               setEditingItem(null);
               setIsFormOpen(true);
             }}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium text-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white font-medium text-sm transition-colors"
           >
             <Plus size={16} />
             Додати обладнання
@@ -91,7 +91,7 @@ export default function InventoryPage() {
           onClick={() => setActiveTab('equipment')}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
             activeTab === 'equipment'
-              ? 'border-orange-600 text-orange-600 dark:text-orange-500'
+              ? 'border-rose-600 text-rose-600 dark:text-rose-500'
               : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
           }`}
         >
@@ -101,7 +101,7 @@ export default function InventoryPage() {
           onClick={() => setActiveTab('maintenance')}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${
             activeTab === 'maintenance'
-              ? 'border-orange-600 text-orange-600 dark:text-orange-500'
+              ? 'border-rose-600 text-rose-600 dark:text-rose-500'
               : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
           }`}
         >
@@ -118,7 +118,7 @@ export default function InventoryPage() {
             <select
               value={locationFilter}
               onChange={(e) => setLocationFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-              className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600"
+              className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-rose-600"
             >
               <option value="all">Усі локації</option>
               {locations.map((l) => (
@@ -128,7 +128,7 @@ export default function InventoryPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as EquipmentStatus | 'all')}
-              className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600"
+              className="px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-rose-600"
             >
               <option value="all">Усі статуси</option>
               {(Object.keys(EQUIPMENT_STATUS_LABELS) as EquipmentStatus[]).map((s) => (

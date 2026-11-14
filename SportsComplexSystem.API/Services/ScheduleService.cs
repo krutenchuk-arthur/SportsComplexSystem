@@ -277,6 +277,64 @@ public class ScheduleService : IScheduleService
     }
 
     /// <summary>
+    /// Клонує тижневий розклад на наступний тиждень (+7 днів).
+    /// Кожен слот обробляється окремо: якщо на новому місці виникає конфлікт
+    /// (перетин часу, ліміт годин, неробочі години тощо), слот пропускається,
+    /// а решта переноситься — транзакція не падає.
+    /// </summary>
+    public async Task<CloneWeekResultDto> CloneWeekAsync(DateTime weekStartDate, int? trainerId = null)
+    {
+        var weekStart = weekStartDate.Date;
+        // Нормалізація до понеділка (тиждень у системі починається з понеділка)
+        var offsetFromMonday = ((int)weekStart.DayOfWeek + 6) % 7;
+        weekStart = weekStart.AddDays(-offsetFromMonday);
+        var weekEnd = weekStart.AddDays(7);
+
+        var query = _context.ScheduleSlots
+            .Include(s => s.Equipment)
+            .Where(s => s.StartTime >= weekStart && s.StartTime < weekEnd);
+
+        if (trainerId.HasValue)
+            query = query.Where(s => s.TrainerId == trainerId.Value);
+
+        var sourceSlots = await query.OrderBy(s => s.StartTime).ToListAsync();
+        var result = new CloneWeekResultDto();
+
+        foreach (var source in sourceSlots)
+        {
+            var dto = new ScheduleSlotCreateUpdateDto
+            {
+                TrainerId = source.TrainerId,
+                LocationId = source.LocationId,
+                Title = source.Title,
+                StartTime = source.StartTime.AddDays(7),
+                EndTime = source.EndTime.AddDays(7),
+                EquipmentIds = source.Equipment.Select(e => e.Id).ToList()
+            };
+
+            try
+            {
+                // CreateAsync перевіряє всі правила та одразу зберігає слот,
+                // тому наступні ітерації валідації вже бачать скопійовані заняття.
+                await CreateAsync(dto);
+                result.CopiedCount++;
+            }
+            catch (ScheduleConflictException ex)
+            {
+                result.SkippedCount++;
+                var reasons = ex.ValidationResult.Conflicts
+                    .Select(c => c.Message)
+                    .Distinct()
+                    .ToList();
+                result.SkippedReasons.Add(
+                    $"«{source.Title}» ({source.StartTime:dd.MM.yyyy HH:mm}): {string.Join(" ", reasons)}");
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// Нараховує обраному інвентарю години напрацювання, що дорівнюють тривалості заняття.
     /// Якщо поріг ТО перевищено - переводить у MaintenanceRequired та створює MaintenanceTicket.
     /// </summary>
