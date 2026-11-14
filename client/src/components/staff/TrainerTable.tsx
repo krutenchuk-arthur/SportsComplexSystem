@@ -56,7 +56,7 @@ export default function TrainerTable({ trainers, onEdit, onDelete }: TrainerTabl
                 <div className="flex justify-end gap-2">
                   <button
                     onClick={() => onEdit(trainer)}
-                    className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-orange-600 dark:hover:text-orange-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                   >
                     <Pencil size={16} />
                   </button>

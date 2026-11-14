@@ -12,7 +12,7 @@ interface ReportIssueModalProps {
 }
 
 const inputClass =
-  'w-full px-3 py-2 rounded-md bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-orange-600';
+  'w-full px-3 py-2 rounded-md bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-rose-600';
 
 /**
  * Швидке створення заявки на ТО ("Повідомити про поломку") для тренера.
@@ -68,7 +68,7 @@ export default function ReportIssueModal({ isOpen, onClose, equipment, onSubmit 
           <button type="button" onClick={onClose} className="px-4 py-2 rounded-md text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800">
             Скасувати
           </button>
-          <button type="submit" disabled={saving} className="flex items-center gap-2 px-4 py-2 rounded-md bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium disabled:opacity-60">
+          <button type="submit" disabled={saving} className="flex items-center gap-2 px-4 py-2 rounded-md bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white text-sm font-medium disabled:opacity-60">
             {saving ? <Loader2 size={14} className="animate-spin" /> : <AlertOctagon size={14} />}
             Створити заявку
           </button>

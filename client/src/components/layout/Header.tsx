@@ -1,23 +1,24 @@
-import { ChevronRight, LogOut, Moon, Sun } from 'lucide-react';
+import { ChevronRight, LogOut, Moon, Search, Sun } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usePreferences } from '../../context/PreferencesContext';
 import type { UserRole } from '../../types/auth';
 import { tabLabel, type TabId } from './navigation';
 
 const ROLE_BADGE: Record<UserRole, string> = {
-  Admin: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-600/10 dark:text-orange-500 dark:border-orange-600/30',
+  Admin: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-500/10 dark:text-rose-500 dark:border-rose-500/30',
   Trainer: 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/30',
   Technician: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/30',
 };
 
 interface HeaderProps {
   activeTab: TabId;
+  onOpenPalette: () => void;
 }
 
 /**
- * Верхня панель: хлібні крихти, бейдж ролі, перемикач теми, вихід.
+ * Верхня панель: хлібні крихти, бейдж ролі, командна палітра, перемикач теми, вихід.
  */
-export default function Header({ activeTab }: HeaderProps) {
+export default function Header({ activeTab, onOpenPalette }: HeaderProps) {
   const { user, settings, logout } = useAuth();
   const { theme, toggleTheme } = usePreferences();
   if (!user) return null;
@@ -31,6 +32,19 @@ export default function Header({ activeTab }: HeaderProps) {
       </nav>
 
       <div className="flex items-center gap-3 shrink-0">
+        <button
+          onClick={onOpenPalette}
+          title="Командна палітра (Ctrl+K)"
+          aria-label="Відкрити командну палітру"
+          className="hidden sm:flex items-center gap-2 pl-2.5 pr-1.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 text-sm text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          <Search size={14} />
+          <span className="hidden lg:inline">Пошук…</span>
+          <kbd className="font-mono text-[10px] px-1 py-0.5 rounded border border-zinc-200 dark:border-zinc-700 text-zinc-400">
+            Ctrl K
+          </kbd>
+        </button>
+
         <div className="hidden sm:flex items-center gap-2">
           <span className="text-sm text-zinc-700 dark:text-zinc-300">{user.fullName}</span>
           <span

@@ -11,7 +11,7 @@ interface KpiCardProps {
 /**
  * KPI-плитка: тонка рамка, мітка зверху, числове значення моноширинним шрифтом.
  */
-export default function KpiCard({ icon: Icon, label, value, accentColor = 'text-orange-600 dark:text-orange-500', hint }: KpiCardProps) {
+export default function KpiCard({ icon: Icon, label, value, accentColor = 'text-rose-600 dark:text-rose-500', hint }: KpiCardProps) {
   return (
     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-5">
       <div className="flex items-center justify-between mb-3">

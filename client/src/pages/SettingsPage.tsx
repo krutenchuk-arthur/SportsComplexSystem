@@ -9,7 +9,7 @@ import { ROLE_LABELS, type SystemSettings } from '../types/auth';
 import { SPECIALIZATION_LABELS } from '../types/enums';
 
 const inputClass =
-  'w-full px-3 py-2 rounded-md bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent';
+  'w-full px-3 py-2 rounded-md bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:border-transparent';
 const labelClass = 'block text-xs font-medium uppercase tracking-wider text-zinc-500 mb-1.5';
 
 function Section({ code, title, children, aside }: { code: string; title: string; children: ReactNode; aside?: ReactNode }) {
@@ -17,7 +17,7 @@ function Section({ code, title, children, aside }: { code: string; title: string
     <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
       <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-200 dark:border-zinc-800">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          <span className="font-mono text-[10px] text-orange-600 dark:text-orange-500">{code}</span>
+          <span className="font-mono text-[10px] text-rose-600 dark:text-rose-500">{code}</span>
           {title}
         </h3>
         {aside}
@@ -234,7 +234,7 @@ function ComplexSection() {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium disabled:opacity-60"
+            className="flex items-center gap-2 px-4 py-2 rounded-md bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white text-sm font-medium disabled:opacity-60"
           >
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
             Зберегти
@@ -279,7 +279,7 @@ function ReportsSection() {
             <button
               onClick={() => run(r.key, r.fn)}
               disabled={busy !== null}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-300 dark:border-zinc-700 text-sm text-zinc-700 dark:text-zinc-300 hover:border-orange-600 hover:text-orange-600 dark:hover:text-orange-500 disabled:opacity-50"
+              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-zinc-300 dark:border-zinc-700 text-sm text-zinc-700 dark:text-zinc-300 hover:border-rose-600 hover:text-rose-600 dark:hover:text-rose-500 disabled:opacity-50"
             >
               {busy === r.key ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
               CSV
@@ -319,11 +319,11 @@ export default function SettingsPage() {
             aria-current={active === t.key ? 'page' : undefined}
             className={`-mb-px shrink-0 flex items-center gap-2 px-4 py-2.5 text-sm border-b-2 transition-colors ${
               active === t.key
-                ? 'border-orange-600 text-zinc-900 dark:text-zinc-100 font-medium'
+                ? 'border-rose-600 text-zinc-900 dark:text-zinc-100 font-medium'
                 : 'border-transparent text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200'
             }`}
           >
-            <span className="font-mono text-[10px] text-orange-600 dark:text-orange-500">{t.code}</span>
+            <span className="font-mono text-[10px] text-rose-600 dark:text-rose-500">{t.code}</span>
             {t.label}
           </button>
         ))}

@@ -68,7 +68,7 @@ export default function EquipmentFormModal({
   };
 
   const inputClass =
-    'w-full px-3 py-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600';
+    'w-full px-3 py-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-rose-600';
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={equipment ? 'Редагувати обладнання' : 'Нове обладнання'}>
@@ -136,7 +136,7 @@ export default function EquipmentFormModal({
           <button
             type="submit"
             disabled={submitting}
-            className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white font-medium transition-colors disabled:opacity-50"
           >
             {submitting ? 'Збереження...' : 'Зберегти'}
           </button>

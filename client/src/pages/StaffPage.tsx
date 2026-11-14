@@ -55,7 +55,7 @@ export default function StaffPage() {
           </button>
           <button
             onClick={handleAdd}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium text-sm transition-colors"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white font-medium text-sm transition-colors"
           >
             <Plus size={16} />
             Додати тренера

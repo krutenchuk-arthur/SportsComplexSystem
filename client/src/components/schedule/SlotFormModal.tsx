@@ -17,6 +17,8 @@ interface SlotFormModalProps {
   equipment: Equipment[];
   slot?: ScheduleSlot | null;
   defaultDate?: Date;
+  /** Година початку за замовчуванням (клік по вільному вікну в сітці) */
+  defaultStartHour?: number;
   /** Якщо задано, тренер зафіксований (роль Trainer створює лише власні слоти) */
   lockedTrainerId?: number | null;
   /** Робочі години комплексу з SystemSettings — межі для вибору часу */
@@ -33,6 +35,7 @@ export default function SlotFormModal({
   equipment,
   slot,
   defaultDate,
+  defaultStartHour,
   lockedTrainerId,
   workDayStartHour = 0,
   workDayEndHour = 24,
@@ -65,7 +68,8 @@ export default function SlotFormModal({
       setTrainerId(lockedTrainerId ?? trainers[0]?.id ?? 0);
       setLocationId(locations[0]?.id ?? 0);
       setDate(format(defaultDate ?? new Date(), 'yyyy-MM-dd'));
-      const firstHour = Math.min(Math.max(9, workDayStartHour), Math.max(workDayStartHour, workDayEndHour - 1));
+      const preferredHour = defaultStartHour ?? 9;
+      const firstHour = Math.min(Math.max(preferredHour, workDayStartHour), Math.max(workDayStartHour, workDayEndHour - 1));
       setStartTime(`${String(firstHour).padStart(2, '0')}:00`);
       setEndTime(`${String(Math.min(firstHour + 1, workDayEndHour)).padStart(2, '0')}:00`);
       setEquipmentIds([]);
@@ -73,7 +77,7 @@ export default function SlotFormModal({
     setConflicts([]);
     setSuggestedTrainer(null);
     setSubmitError(null);
-  }, [isOpen, slot, trainers, locations, defaultDate, lockedTrainerId, workDayStartHour, workDayEndHour]);
+  }, [isOpen, slot, trainers, locations, defaultDate, defaultStartHour, lockedTrainerId, workDayStartHour, workDayEndHour]);
 
   const dto = useMemo<ScheduleSlotCreateUpdate>(
     () => ({
@@ -134,7 +138,7 @@ export default function SlotFormModal({
   };
 
   const inputClass =
-    'w-full px-3 py-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-600';
+    'w-full px-3 py-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-rose-600';
 
   const padHour = (h: number) => `${String(h).padStart(2, '0')}:00`;
   const minTime = padHour(workDayStartHour);
@@ -200,7 +204,7 @@ export default function SlotFormModal({
 
         <p className="flex items-center justify-between font-mono text-[11px] text-zinc-500">
           <span>РОБОЧІ ГОДИНИ: {minTime}–{maxTime}</span>
-          {outsideWorkingHours && <span className="text-orange-600 dark:text-orange-500">ПОЗА ГРАФІКОМ</span>}
+          {outsideWorkingHours && <span className="text-rose-600 dark:text-rose-500">ПОЗА ГРАФІКОМ</span>}
         </p>
 
         <div>
@@ -220,7 +224,7 @@ export default function SlotFormModal({
                     type="checkbox"
                     checked={equipmentIds.includes(e.id)}
                     onChange={() => toggleEquipment(e.id)}
-                    className="accent-orange-600"
+                    className="accent-rose-600"
                   />
                   <span className="font-mono text-zinc-500">{e.inventoryNumber}</span>
                   <span className="truncate">{e.name}</span>
@@ -248,7 +252,7 @@ export default function SlotFormModal({
           <button
             type="submit"
             disabled={submitting}
-            className="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-medium transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-rose-600 dark:bg-rose-500 hover:bg-rose-700 text-white font-medium transition-colors disabled:opacity-50"
           >
             {submitting ? 'Збереження...' : 'Зберегти'}
           </button>

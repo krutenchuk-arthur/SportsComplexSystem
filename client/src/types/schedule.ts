@@ -40,3 +40,9 @@ export interface ScheduleSlotCreateUpdate {
   title: string;
   equipmentIds: number[];
 }
+
+export interface CloneWeekResult {
+  copiedCount: number;
+  skippedCount: number;
+  skippedReasons: string[];
+}
