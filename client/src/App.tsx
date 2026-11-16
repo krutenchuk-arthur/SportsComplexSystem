@@ -78,9 +78,9 @@ function App() {
           onOpenPalette={() => setPaletteOpen(true)}
           onOpenMobileNav={() => setMobileNavOpen(true)}
         />
-        <main className="flex-1 overflow-auto">
-          {/* Повноширинний контейнер: 360px → 2560px без жорстких max-w-* */}
-          <div className="w-full max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <main className="flex-1 flex flex-col min-h-0 overflow-auto">
+          {/* Контент на всю ширину екрана: без max-w-*, картки й таблиці розтягуються до країв */}
+          <div className="w-full flex-1 flex flex-col px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
             {tab === 'dashboard' && <DashboardPage />}
             {tab === 'staff' && <StaffPage />}
             {tab === 'schedule' && <SchedulePage />}

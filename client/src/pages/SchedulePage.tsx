@@ -130,7 +130,7 @@ export default function SchedulePage() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col flex-1 min-h-0">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <PageHeader
           title="Диспетчер розкладу"
@@ -270,10 +270,10 @@ export default function SchedulePage() {
       </div>
 
       {loading ? (
-        <div className="w-full overflow-x-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3 md:min-w-[840px]">
+        <div className="w-full overflow-x-auto flex-1 min-h-0 flex flex-col">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3 md:min-w-[840px] flex-1">
             {Array.from({ length: 7 }).map((_, i) => (
-              <div key={i} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 min-h-[200px] animate-pulse">
+              <div key={i} className="h-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 min-h-[200px] animate-pulse">
                 <div className="h-4 bg-zinc-100 dark:bg-zinc-800 rounded w-16 mb-4" />
                 <div className="space-y-2">
                   <div className="h-16 bg-zinc-100 dark:bg-zinc-800 rounded-lg" />

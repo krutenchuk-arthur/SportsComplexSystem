@@ -13,7 +13,7 @@ interface AlertsFeedProps {
 export default function AlertsFeed({ alerts, loading }: AlertsFeedProps) {
   if (loading) {
     return (
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-6 animate-pulse space-y-3">
+      <div className="h-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-6 animate-pulse space-y-3">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="h-4 bg-zinc-100 dark:bg-zinc-800 rounded w-full" />
         ))}
@@ -23,16 +23,16 @@ export default function AlertsFeed({ alerts, loading }: AlertsFeedProps) {
 
   if (alerts.length === 0) {
     return (
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-6 text-center text-sm text-zinc-500">
+      <div className="h-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-6 text-center text-sm text-zinc-500">
         Наразі критичних сповіщень немає.
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-6">
-      <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-4">Критичні сповіщення</h3>
-      <ul className="space-y-3">
+    <div className="h-full min-h-0 flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-6">
+      <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-4 shrink-0">Критичні сповіщення</h3>
+      <ul className="space-y-3 xl:flex-1 xl:min-h-0 xl:overflow-y-auto">
         {alerts.map((alert, idx) => {
           const isCritical = alert.severity === 'Critical';
           const Icon = isCritical ? AlertCircle : AlertTriangle;
