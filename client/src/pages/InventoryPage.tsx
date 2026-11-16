@@ -61,7 +61,7 @@ export default function InventoryPage() {
           title="Облік інвентарю та технічного обслуговування"
           subtitle="Контроль напрацювання обладнання, порогів ТО та заявок на ремонт"
         />
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
         {hasRole('Trainer') && (
           <button
             onClick={() => setIsReportOpen(true)}
@@ -114,7 +114,7 @@ export default function InventoryPage() {
 
       {activeTab === 'equipment' && (
         <>
-          <div className="flex gap-3 mb-4">
+          <div className="flex flex-wrap gap-2 sm:gap-3 mb-4">
             <select
               value={locationFilter}
               onChange={(e) => setLocationFilter(e.target.value === 'all' ? 'all' : Number(e.target.value))}

@@ -40,12 +40,12 @@ export default function StaffPage() {
 
   return (
     <div>
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <PageHeader
           title="Персонал та балансування навантаження"
           subtitle="Контроль фактичної завантаженості тренерів відносно тижневого ліміту годин"
         />
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
           <button
             onClick={() => setIsAutoAssignOpen(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 font-medium text-sm transition-colors"

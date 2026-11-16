@@ -15,14 +15,14 @@ const labelClass = 'block text-xs font-medium uppercase tracking-wider text-zinc
 function Section({ code, title, children, aside }: { code: string; title: string; children: ReactNode; aside?: ReactNode }) {
   return (
     <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
-      <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-5 py-3 border-b border-zinc-200 dark:border-zinc-800">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
           <span className="font-mono text-[10px] text-rose-600 dark:text-rose-500">{code}</span>
           {title}
         </h3>
         {aside}
       </div>
-      <div className="p-5">{children}</div>
+      <div className="p-4 sm:p-5">{children}</div>
     </section>
   );
 }
@@ -271,7 +271,7 @@ function ReportsSection() {
     <Section code="C" title="Експорт звітності" aside={<span className="font-mono text-[10px] uppercase text-zinc-400">CSV · UTF-8 BOM</span>}>
       <div className="grid gap-3 md:grid-cols-2">
         {reports.map((r) => (
-          <div key={r.key} className="flex items-start justify-between gap-4 p-4 border border-zinc-200 dark:border-zinc-800 rounded-md">
+          <div key={r.key} className="flex flex-wrap items-start justify-between gap-3 p-3 sm:p-4 border border-zinc-200 dark:border-zinc-800 rounded-md">
             <div className="min-w-0">
               <p className="font-mono text-xs text-zinc-900 dark:text-zinc-100 break-all">{r.file}</p>
               <p className="text-xs text-zinc-500 mt-1">{r.desc}</p>

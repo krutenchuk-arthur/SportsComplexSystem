@@ -31,7 +31,7 @@ function TrainerDashboard() {
 
   if (!user?.trainerId) {
     return (
-      <p className="text-sm text-zinc-500 border border-dashed border-zinc-300 dark:border-zinc-700 rounded-lg p-6">
+      <p className="text-sm text-zinc-500 border border-dashed border-zinc-300 dark:border-zinc-700 rounded-lg p-4 sm:p-6">
         Акаунт не прив'язаний до профілю тренера. Зверніться до адміністратора.
       </p>
     );
@@ -40,19 +40,19 @@ function TrainerDashboard() {
   return (
     <div className="space-y-6">
       {trainersLoading || !me ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <KpiCard icon={Clock} label="Призначено цього тижня" value={`${me.assignedHours.toFixed(1)} год`} hint={`ліміт ${me.maxWeeklyHours} год`} />
           <KpiCard icon={Gauge} label="Завантаженість" value={`${me.loadPercentage.toFixed(0)}%`} />
           <KpiCard icon={CalendarClock} label="Найближчих занять" value={upcoming.length} />
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-5">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+        <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Тижневе навантаження</h3>
             {me && <StatusBadge label={me.loadStatus} level={loadStatusToLevel(me.loadStatus)} />}
@@ -65,19 +65,19 @@ function TrainerDashboard() {
         </section>
 
         <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
-          <h3 className="px-5 py-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100 border-b border-zinc-200 dark:border-zinc-800">
+          <h3 className="px-4 sm:px-5 py-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100 border-b border-zinc-200 dark:border-zinc-800">
             Найближчі тренування
           </h3>
           {slotsLoading ? (
-            <div className="p-5 space-y-2 animate-pulse">
+            <div className="p-4 sm:p-5 space-y-2 animate-pulse">
               {Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-10 bg-zinc-100 dark:bg-zinc-800 rounded" />)}
             </div>
           ) : upcoming.length === 0 ? (
-            <p className="p-5 text-sm text-zinc-500">Запланованих занять немає.</p>
+            <p className="p-4 sm:p-5 text-sm text-zinc-500">Запланованих занять немає.</p>
           ) : (
             <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {upcoming.map((s) => (
-                <li key={s.id} className="px-5 py-3 flex items-center justify-between gap-4">
+                <li key={s.id} className="px-4 sm:px-5 py-3 flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">{s.title}</p>
                     <p className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5"><MapPin size={11} /> {s.locationName}</p>
@@ -102,9 +102,14 @@ function OperationsDashboard() {
   return (
     <div className="space-y-6">
       <KpiGrid kpi={kpi} loading={dashboardLoading} />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <WorkloadOverview trainers={trainers} loading={trainersLoading} />
-        <AlertsFeed alerts={alerts} loading={dashboardLoading} />
+      {/* 12-колонкова сітка: 7 колонок навантаження персоналу + 5 колонок сповіщень */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        <div className="xl:col-span-7">
+          <WorkloadOverview trainers={trainers} loading={trainersLoading} />
+        </div>
+        <div className="xl:col-span-5">
+          <AlertsFeed alerts={alerts} loading={dashboardLoading} />
+        </div>
       </div>
     </div>
   );

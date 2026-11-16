@@ -20,7 +20,7 @@ export default function WorkloadOverview({ trainers, loading }: WorkloadOverview
   const sorted = [...trainers].sort((a, b) => b.loadPercentage - a.loadPercentage);
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-6">
+    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-6">
       <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-4">Розподіл навантаження персоналу</h3>
       <div className="space-y-4">
         {sorted.map((trainer) => (

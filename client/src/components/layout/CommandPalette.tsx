@@ -193,7 +193,7 @@ export default function CommandPalette({ onClose, onNavigate }: CommandPalettePr
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[12vh] px-4 bg-zinc-950/50 dark:bg-zinc-950/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-6 sm:pt-[12vh] px-3 sm:px-4 bg-zinc-950/50 dark:bg-zinc-950/70 backdrop-blur-sm"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -202,7 +202,7 @@ export default function CommandPalette({ onClose, onNavigate }: CommandPalettePr
         role="dialog"
         aria-modal="true"
         aria-label="Командна палітра"
-        className="w-full max-w-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-2xl overflow-hidden"
+        className="w-[calc(100vw-1.5rem)] sm:w-full max-w-xl max-h-[90vh] flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-2xl overflow-hidden"
       >
         <div className="flex items-center gap-2.5 px-4 h-12 border-b border-zinc-200 dark:border-zinc-800">
           <Search size={16} className="text-zinc-400 shrink-0" />
@@ -218,7 +218,7 @@ export default function CommandPalette({ onClose, onNavigate }: CommandPalettePr
           </kbd>
         </div>
 
-        <div ref={listRef} className="max-h-80 overflow-y-auto py-2">
+        <div ref={listRef} className="flex-1 min-h-0 overflow-y-auto py-2">
           {flatItems.length === 0 && (
             <p className="px-4 py-8 text-center text-sm text-zinc-400">
               Нічого не знайдено за запитом «{query}»

@@ -11,6 +11,10 @@ export default {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Consolas', 'monospace'],
       },
+      // Tailwind 3.4 не має ступеня xs для backdrop-blur — додаємо для мобільної шторки
+      backdropBlur: {
+        xs: '2px',
+      },
     },
   },
   plugins: [],

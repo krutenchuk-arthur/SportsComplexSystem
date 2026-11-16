@@ -4,6 +4,7 @@ import Header from './components/layout/Header';
 import CommandPalette from './components/layout/CommandPalette';
 import { defaultTabForRole, navItemsForRole, type TabId } from './components/layout/navigation';
 import { useAuth } from './context/AuthContext';
+import { usePreferences } from './context/PreferencesContext';
 import DashboardPage from './pages/DashboardPage';
 import StaffPage from './pages/StaffPage';
 import SchedulePage from './pages/SchedulePage';
@@ -13,8 +14,10 @@ import LoginPage from './pages/LoginPage';
 
 function App() {
   const { user, initializing } = useAuth();
+  const { sidebarCollapsed, toggleSidebarCollapsed } = usePreferences();
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   // При зміні користувача відкриваємо стартову вкладку його ролі
   useEffect(() => {
@@ -23,6 +26,7 @@ function App() {
     } else {
       setPaletteOpen(false);
     }
+    setMobileNavOpen(false);
   }, [user]);
 
   // Ctrl/Cmd + K — командна палітра
@@ -36,6 +40,12 @@ function App() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
+
+  /** Навігація: змінює вкладку та закриває мобільну шторку */
+  const goToTab = (nextTab: TabId) => {
+    setActiveTab(nextTab);
+    setMobileNavOpen(false);
+  };
 
   if (initializing) {
     return (
@@ -52,13 +62,25 @@ function App() {
   const tab = allowed ? activeTab : defaultTabForRole(user.role);
 
   return (
-    <div className="h-screen flex overflow-hidden">
-      <Sidebar activeTab={tab} onTabChange={setActiveTab} />
+    <div className="h-screen flex overflow-hidden bg-zinc-50 dark:bg-zinc-950">
+      <Sidebar
+        activeTab={tab}
+        onTabChange={goToTab}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={toggleSidebarCollapsed}
+        mobileOpen={mobileNavOpen}
+        onCloseMobile={() => setMobileNavOpen(false)}
+      />
 
       <div className="flex-1 flex flex-col min-w-0">
-        <Header activeTab={tab} onOpenPalette={() => setPaletteOpen(true)} />
-        <main className="flex-1 overflow-auto p-6">
-          <div className="max-w-7xl mx-auto">
+        <Header
+          activeTab={tab}
+          onOpenPalette={() => setPaletteOpen(true)}
+          onOpenMobileNav={() => setMobileNavOpen(true)}
+        />
+        <main className="flex-1 overflow-auto">
+          {/* Повноширинний контейнер: 360px → 2560px без жорстких max-w-* */}
+          <div className="w-full max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
             {tab === 'dashboard' && <DashboardPage />}
             {tab === 'staff' && <StaffPage />}
             {tab === 'schedule' && <SchedulePage />}
@@ -71,10 +93,7 @@ function App() {
       {paletteOpen && (
         <CommandPalette
           onClose={() => setPaletteOpen(false)}
-          onNavigate={(nextTab) => {
-            setActiveTab(nextTab);
-            setPaletteOpen(false);
-          }}
+          onNavigate={goToTab}
         />
       )}
     </div>
@@ -82,3 +101,4 @@ function App() {
 }
 
 export default App;
+

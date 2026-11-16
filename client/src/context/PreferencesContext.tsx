@@ -6,13 +6,18 @@ export type Density = 'comfortable' | 'compact';
 interface PreferencesValue {
   theme: Theme;
   density: Density;
+  /** Десктопне бічне меню згорнуто до смуги з іконками */
+  sidebarCollapsed: boolean;
   setTheme: (t: Theme) => void;
   toggleTheme: () => void;
   setDensity: (d: Density) => void;
+  setSidebarCollapsed: (collapsed: boolean) => void;
+  toggleSidebarCollapsed: () => void;
 }
 
 const THEME_KEY = 'scs.theme';
 const DENSITY_KEY = 'scs.density';
+const SIDEBAR_KEY = 'scs.sidebarCollapsed';
 
 const PreferencesContext = createContext<PreferencesValue | null>(null);
 
@@ -20,6 +25,9 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light'));
   const [density, setDensity] = useState<Density>(() =>
     localStorage.getItem(DENSITY_KEY) === 'compact' ? 'compact' : 'comfortable'
+  );
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(
+    () => localStorage.getItem(SIDEBAR_KEY) === 'true'
   );
 
   useEffect(() => {
@@ -32,9 +40,22 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(DENSITY_KEY, density);
   }, [density]);
 
+  useEffect(() => {
+    localStorage.setItem(SIDEBAR_KEY, String(sidebarCollapsed));
+  }, [sidebarCollapsed]);
+
   return (
     <PreferencesContext.Provider
-      value={{ theme, density, setTheme, setDensity, toggleTheme: () => setTheme((t) => (t === 'dark' ? 'light' : 'dark')) }}
+      value={{
+        theme,
+        density,
+        sidebarCollapsed,
+        setTheme,
+        setDensity,
+        setSidebarCollapsed,
+        toggleSidebarCollapsed: () => setSidebarCollapsed((c) => !c),
+        toggleTheme: () => setTheme((t) => (t === 'dark' ? 'light' : 'dark')),
+      }}
     >
       {children}
     </PreferencesContext.Provider>
