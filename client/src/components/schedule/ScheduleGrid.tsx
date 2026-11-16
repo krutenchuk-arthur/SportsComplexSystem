@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { addDays, format, startOfWeek, isSameDay } from 'date-fns';
 import { uk } from 'date-fns/locale';
-import { MapPin, User, Dumbbell, Pencil, Trash2, Plus } from 'lucide-react';
+import { MapPin, User, Users, Dumbbell, Pencil, Trash2, Plus } from 'lucide-react';
 import type { ScheduleSlot } from '../../types/schedule';
 import { formatTime } from '../../utils/formatters';
 
@@ -156,6 +156,8 @@ export default function ScheduleGrid({
               }
 
               const slot = entry.slot;
+              const capacity = slot.locationMaxCapacity ?? 0;
+              const isFull = capacity > 0 && slot.bookedCount >= capacity;
               return (
               <div
                 key={slot.id}
@@ -197,6 +199,17 @@ export default function ScheduleGrid({
                 </p>
                 <p className="text-[11px] text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
                   <MapPin size={10} /> {slot.locationName}
+                </p>
+                <p
+                  className={`text-[11px] flex items-center gap-1 font-mono ${
+                    isFull
+                      ? 'text-amber-700 dark:text-amber-500'
+                      : 'text-zinc-500 dark:text-zinc-400'
+                  }`}
+                  title="Записані учасники / місткість локації"
+                >
+                  <Users size={10} /> {slot.bookedCount}/{capacity > 0 ? capacity : '—'}
+                  {isFull && <span className="uppercase tracking-wider text-[9px]">заповнено</span>}
                 </p>
                 {slot.equipmentNames.length > 0 && (
                   <p className="text-[11px] text-zinc-500 flex items-center gap-1 mt-1">

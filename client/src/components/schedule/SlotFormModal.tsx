@@ -47,6 +47,7 @@ export default function SlotFormModal({
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
   const [equipmentIds, setEquipmentIds] = useState<number[]>([]);
+  const [bookedCount, setBookedCount] = useState(0);
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
   const [suggestedTrainer, setSuggestedTrainer] = useState<Trainer | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -63,6 +64,7 @@ export default function SlotFormModal({
       setStartTime(format(new Date(slot.startTime), 'HH:mm'));
       setEndTime(format(new Date(slot.endTime), 'HH:mm'));
       setEquipmentIds(slot.equipmentIds);
+      setBookedCount(slot.bookedCount);
     } else {
       setTitle('');
       setTrainerId(lockedTrainerId ?? trainers[0]?.id ?? 0);
@@ -73,6 +75,7 @@ export default function SlotFormModal({
       setStartTime(`${String(firstHour).padStart(2, '0')}:00`);
       setEndTime(`${String(Math.min(firstHour + 1, workDayEndHour)).padStart(2, '0')}:00`);
       setEquipmentIds([]);
+      setBookedCount(0);
     }
     setConflicts([]);
     setSuggestedTrainer(null);
@@ -87,8 +90,9 @@ export default function SlotFormModal({
       startTime: `${date}T${startTime}:00`,
       endTime: `${date}T${endTime}:00`,
       equipmentIds,
+      bookedCount,
     }),
-    [title, trainerId, locationId, date, startTime, endTime, equipmentIds]
+    [title, trainerId, locationId, date, startTime, endTime, equipmentIds, bookedCount]
   );
 
   // Жива валідація конфліктів (debounce) — instant visual validation
@@ -120,6 +124,8 @@ export default function SlotFormModal({
     if (endTime <= startTime) return setSubmitError('Час завершення має бути пізніше за час початку.');
     if (outsideWorkingHours)
       return setSubmitError(`Заняття поза робочими годинами комплексу (${minTime}–${maxTime}).`);
+    if (capacityExceeded)
+      return setSubmitError(`Перевищено місткість локації: ${bookedCount} із ${locationCapacity} місць.`);
 
     setSubmitting(true);
     try {
@@ -144,6 +150,10 @@ export default function SlotFormModal({
   const minTime = padHour(workDayStartHour);
   const maxTime = padHour(workDayEndHour);
   const outsideWorkingHours = startTime < minTime || endTime > maxTime || endTime <= startTime;
+
+  const selectedLocation = locations.find((l) => l.id === locationId);
+  const locationCapacity = selectedLocation?.maxCapacity ?? 0;
+  const capacityExceeded = locationCapacity > 0 && bookedCount > locationCapacity;
 
   return (
     <Modal
@@ -206,6 +216,39 @@ export default function SlotFormModal({
           <span>РОБОЧІ ГОДИНИ: {minTime}–{maxTime}</span>
           {outsideWorkingHours && <span className="text-rose-600 dark:text-rose-500">ПОЗА ГРАФІКОМ</span>}
         </p>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="slot-booked-count" className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">
+              Записано учасників
+            </label>
+            <input
+              id="slot-booked-count"
+              type="number"
+              min={0}
+              step={1}
+              inputMode="numeric"
+              value={bookedCount}
+              onChange={(e) => setBookedCount(Math.max(0, Number(e.target.value) || 0))}
+              className={`${inputClass} font-mono`}
+            />
+          </div>
+          <div className="flex flex-col justify-end">
+            <div
+              className={`px-3 py-2.5 rounded-lg border font-mono text-xs ${
+                capacityExceeded
+                  ? 'border-red-300 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400'
+                  : 'border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400'
+              }`}
+            >
+              <p className="uppercase tracking-wider text-[10px]">Місткість зали</p>
+              <p className="mt-0.5 text-sm font-semibold">
+                {locationCapacity > 0 ? `${bookedCount} / ${locationCapacity}` : 'не задано'}
+              </p>
+              {capacityExceeded && <p className="mt-0.5 text-[10px]">ПЕРЕВИЩЕНО ЛІМІТ</p>}
+            </div>
+          </div>
+        </div>
 
         <div>
           <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">Обладнання</label>

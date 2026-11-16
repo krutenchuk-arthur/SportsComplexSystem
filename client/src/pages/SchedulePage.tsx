@@ -20,6 +20,7 @@ import SlotFormModal from '../components/schedule/SlotFormModal';
 import { useSchedule } from '../hooks/useSchedule';
 import { useTrainers } from '../hooks/useTrainers';
 import { useEquipment } from '../hooks/useEquipment';
+import { useRealtimeUpdates } from '../hooks/useRealtimeUpdates';
 import { scheduleApi } from '../api/scheduleApi';
 import { getApiErrorMessage } from '../api/axiosClient';
 import { buildScheduleIcs, downloadTextFile } from '../utils/icsExport';
@@ -58,6 +59,11 @@ export default function SchedulePage() {
       (locationFilter === 'all' || s.locationId === locationFilter) &&
       (!onlyMine || ownTrainerId === null || s.trainerId === ownTrainerId)
   );
+
+  // Живі оновлення: інші користувачі додають/змінюють заняття — сітка перезавантажується сама
+  useRealtimeUpdates(() => {
+    void refresh();
+  });
 
   const handleAdd = () => {
     setEditingSlot(null);

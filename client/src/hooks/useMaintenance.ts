@@ -26,8 +26,8 @@ export function useMaintenance() {
     refresh();
   }, [refresh]);
 
-  const updateStatus = async (id: number, status: TicketStatus) => {
-    await maintenanceApi.updateStatus(id, status);
+  const updateStatus = async (id: number, status: TicketStatus, repairCost?: number | null) => {
+    await maintenanceApi.updateStatus(id, status, repairCost);
     await refresh();
   };
 

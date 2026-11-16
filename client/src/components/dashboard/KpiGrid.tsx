@@ -1,7 +1,8 @@
-import { Activity, CalendarCheck, Dumbbell, Wrench } from 'lucide-react';
+import { Activity, CalendarCheck, Dumbbell, Receipt, Wallet, Wrench } from 'lucide-react';
 import KpiCard from '../common/KpiCard';
 import SkeletonCard from '../common/SkeletonCard';
 import type { DashboardKpi } from '../../types/dashboard';
+import { formatMoney } from '../../utils/formatters';
 
 interface KpiGridProps {
   kpi: DashboardKpi | null;
@@ -11,8 +12,8 @@ interface KpiGridProps {
 export default function KpiGrid({ kpi, loading }: KpiGridProps) {
   if (loading || !kpi) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
           <SkeletonCard key={i} />
         ))}
       </div>
@@ -20,7 +21,7 @@ export default function KpiGrid({ kpi, loading }: KpiGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
       <KpiCard
         icon={Activity}
         label="Загальна завантаженість тренерів"
@@ -45,6 +46,21 @@ export default function KpiGrid({ kpi, loading }: KpiGridProps) {
         value={kpi.openTicketsCount}
         accentColor="text-rose-600 dark:text-rose-500"
       />
+      <KpiCard
+        icon={Wallet}
+        label="Фонд оплати праці за тиждень"
+        value={formatMoney(kpi.weeklyPayrollEstimate)}
+        hint="Σ (призначені години × ставка тренера)"
+        accentColor="text-emerald-600 dark:text-emerald-500"
+      />
+      <KpiCard
+        icon={Receipt}
+        label="Вартість виконаних ремонтів"
+        value={formatMoney(kpi.totalMaintenanceCost)}
+        hint="Σ вартості завершених заявок ТО"
+        accentColor="text-emerald-600 dark:text-emerald-500"
+      />
     </div>
   );
 }
+

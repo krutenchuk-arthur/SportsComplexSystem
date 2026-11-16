@@ -20,8 +20,12 @@ export const maintenanceApi = {
     return data;
   },
 
-  updateStatus: async (id: number, status: TicketStatus): Promise<MaintenanceTicket> => {
-    const { data } = await axiosClient.patch(`/maintenance/tickets/${id}/status`, { status });
+  updateStatus: async (
+    id: number,
+    status: TicketStatus,
+    repairCost?: number | null
+  ): Promise<MaintenanceTicket> => {
+    const { data } = await axiosClient.patch(`/maintenance/tickets/${id}/status`, { status, repairCost });
     return data;
   },
 };

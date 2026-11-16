@@ -1,4 +1,4 @@
-import { Pencil, Trash2, Timer, MapPin } from 'lucide-react';
+import { Pencil, Trash2, Timer, MapPin, QrCode } from 'lucide-react';
 import type { Equipment } from '../../types/equipment';
 import { EQUIPMENT_STATUS_LABELS, type EquipmentStatus } from '../../types/enums';
 import ProgressBar from '../common/ProgressBar';
@@ -10,9 +10,11 @@ interface EquipmentTableProps {
   onEdit?: (item: Equipment) => void;
   onDelete?: (id: number) => void;
   onAddUsage?: (item: Equipment) => void;
+  /** Відкрити QR-паспорт обладнання (доступно всім ролям) */
+  onOpenPassport?: (item: Equipment) => void;
 }
 
-export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage }: EquipmentTableProps) {
+export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage, onOpenPassport }: EquipmentTableProps) {
   return (
     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
       <div className="w-full overflow-x-auto">
@@ -30,7 +32,20 @@ export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage
         <tbody>
           {equipment.map((item) => (
             <tr key={item.id} className="border-b border-zinc-200 dark:border-zinc-800 last:border-b-0 hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
-              <td className="p-4 font-mono text-xs text-rose-600 dark:text-rose-500">{item.inventoryNumber}</td>
+              <td className="p-4 font-mono text-xs">
+                {onOpenPassport ? (
+                  <button
+                    type="button"
+                    onClick={() => onOpenPassport(item)}
+                    title="Відкрити QR-паспорт"
+                    className="text-rose-600 dark:text-rose-500 hover:underline"
+                  >
+                    {item.inventoryNumber}
+                  </button>
+                ) : (
+                  <span className="text-rose-600 dark:text-rose-500">{item.inventoryNumber}</span>
+                )}
+              </td>
               <td className="p-4 text-zinc-900 dark:text-zinc-100 font-medium">{item.name}</td>
               <td className="p-4 text-zinc-500 dark:text-zinc-400 text-xs">
                 <span className="flex items-center gap-1.5">
@@ -53,6 +68,15 @@ export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage
               </td>
               <td className="p-4 text-right">
                 <div className="flex justify-end gap-2">
+                  {onOpenPassport && (
+                    <button
+                      onClick={() => onOpenPassport(item)}
+                      title="QR-паспорт обладнання"
+                      className="p-1.5 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    >
+                      <QrCode size={16} />
+                    </button>
+                  )}
                   {onAddUsage && <button
                     onClick={() => onAddUsage(item)}
                     title="Нарахувати години використання"
@@ -74,7 +98,7 @@ export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage
                   >
                     <Trash2 size={16} />
                   </button>}
-                  {!onAddUsage && !onEdit && !onDelete && <span className="font-mono text-[10px] text-zinc-400">—</span>}
+                  {!onAddUsage && !onEdit && !onDelete && !onOpenPassport && <span className="font-mono text-[10px] text-zinc-400">—</span>}
                 </div>
               </td>
             </tr>

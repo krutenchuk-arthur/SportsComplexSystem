@@ -4,6 +4,10 @@ export interface DashboardKpi {
   equipmentInService: number;
   equipmentOnMaintenance: number;
   openTicketsCount: number;
+  /** Прогноз фонду оплати праці на поточний тиждень: Σ(години × ставка), грн */
+  weeklyPayrollEstimate: number;
+  /** Сумарна вартість виконаних ремонтів за всіма заявками ТО, грн */
+  totalMaintenanceCost: number;
 }
 
 export type AlertSeverity = 'Warning' | 'Critical';
