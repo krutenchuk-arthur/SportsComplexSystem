@@ -17,7 +17,7 @@ const COLUMNS: { status: TicketStatus; title: string; accent: string }[] = [
 
 export default function MaintenanceKanban({ tickets, onUpdateStatus }: MaintenanceKanbanProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       {COLUMNS.map((column) => {
         const columnTickets = tickets.filter((t) => t.status === column.status);
         return (

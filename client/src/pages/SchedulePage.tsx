@@ -136,7 +136,7 @@ export default function SchedulePage() {
           title="Диспетчер розкладу"
           subtitle="Тижнева сітка занять з автоматичною перевіркою колізій залу, тренера та обладнання"
         />
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {isTrainer && (
             <label className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300 cursor-pointer select-none">
               <button
@@ -255,7 +255,7 @@ export default function SchedulePage() {
           <span>
             {format(weekStart, 'dd.MM.yyyy', { locale: uk })} —{' '}
             {format(addDays(weekStart, 6), 'dd.MM.yyyy', { locale: uk })}
-            <span className="text-zinc-500 ml-2 text-xs">(тиждень)</span>
+            <span className="text-zinc-500 ml-2 text-xs hidden sm:inline">(тиждень)</span>
           </span>
           <span className="hidden sm:inline font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded border border-zinc-300 dark:border-zinc-700 text-zinc-500">
             {String(workDayStartHour).padStart(2, '0')}:00–{String(workDayEndHour).padStart(2, '0')}:00
@@ -270,16 +270,18 @@ export default function SchedulePage() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <div key={i} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 min-h-[200px] animate-pulse">
-              <div className="h-4 bg-zinc-100 dark:bg-zinc-800 rounded w-16 mb-4" />
-              <div className="space-y-2">
-                <div className="h-16 bg-zinc-100 dark:bg-zinc-800 rounded-lg" />
-                <div className="h-16 bg-zinc-100 dark:bg-zinc-800 rounded-lg" />
+        <div className="w-full overflow-x-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3 md:min-w-[840px]">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 min-h-[200px] animate-pulse">
+                <div className="h-4 bg-zinc-100 dark:bg-zinc-800 rounded w-16 mb-4" />
+                <div className="space-y-2">
+                  <div className="h-16 bg-zinc-100 dark:bg-zinc-800 rounded-lg" />
+                  <div className="h-16 bg-zinc-100 dark:bg-zinc-800 rounded-lg" />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       ) : (
         <ScheduleGrid

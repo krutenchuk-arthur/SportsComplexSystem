@@ -73,16 +73,26 @@ export default function LoginPage() {
       </div>
 
       {/* Права панель: форма */}
-      <div className="flex flex-col justify-center px-6 py-10 sm:px-12 relative">
+      <div className="flex flex-col justify-center px-4 py-8 sm:px-6 sm:py-10 lg:px-12 relative overflow-y-auto">
         <button
           onClick={toggleTheme}
           aria-label="Перемкнути тему"
-          className="absolute top-5 right-5 p-2 rounded-md text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-md text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
         </button>
 
         <div className="w-full max-w-md mx-auto">
+          {/* Компактний бренд для мобільних: ліва декоративна панель прихована (< lg) */}
+          <div className="lg:hidden flex items-center gap-2.5 mb-6">
+            <div className="w-8 h-8 shrink-0 rounded-md bg-rose-600 dark:bg-rose-500 flex items-center justify-center">
+              <Activity size={18} className="text-white" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">Sports Complex / Control</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-500">RBAC · JWT · CSV</p>
+            </div>
+          </div>
           <p className="font-mono text-[11px] uppercase tracking-wider text-rose-600 dark:text-rose-500">Вхід у систему</p>
           <h2 className="mt-1 text-2xl font-semibold text-zinc-900 dark:text-zinc-100">Авторизація</h2>
 
@@ -126,7 +136,7 @@ export default function LoginPage() {
                     type="button"
                     disabled={pending !== null}
                     onClick={() => doLogin(acc.email, acc.password, acc.role)}
-                    className="group flex items-center gap-3 text-left p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-rose-600 dark:hover:border-rose-600 disabled:opacity-60 transition-colors"
+                    className="group flex items-center gap-3 text-left p-2.5 sm:p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:border-rose-600 dark:hover:border-rose-600 disabled:opacity-60 transition-colors"
                   >
                     <div className="w-9 h-9 shrink-0 rounded-md border border-zinc-200 dark:border-zinc-700 flex items-center justify-center text-zinc-600 dark:text-zinc-300 group-hover:text-rose-600 group-hover:border-rose-600">
                       {pending === acc.role ? <Loader2 size={16} className="animate-spin" /> : <Icon size={16} />}

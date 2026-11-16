@@ -15,7 +15,8 @@ interface EquipmentTableProps {
 export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage }: EquipmentTableProps) {
   return (
     <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
-      <table className="w-full text-sm">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full min-w-[680px] text-sm">
         <thead>
           <tr className="border-b border-zinc-200 dark:border-zinc-800 text-left text-zinc-500 dark:text-zinc-400">
             <th className="p-4 font-medium">Інв. №</th>
@@ -79,7 +80,8 @@ export default function EquipmentTable({ equipment, onEdit, onDelete, onAddUsage
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   );
 }

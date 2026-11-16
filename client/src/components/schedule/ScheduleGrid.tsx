@@ -103,7 +103,8 @@ export default function ScheduleGrid({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3">
+    <div className="w-full overflow-x-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3 md:min-w-[840px]">
       {days.map((day, idx) => (
         <div key={idx} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 min-h-[200px]">
           <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-zinc-200 dark:border-zinc-800">
@@ -208,6 +209,7 @@ export default function ScheduleGrid({
           </div>
         </div>
       ))}
+      </div>
     </div>
   );
 }
