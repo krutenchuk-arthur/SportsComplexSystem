@@ -49,7 +49,7 @@ public class MaintenanceController : ControllerBase
     {
         try
         {
-            var updated = await _service.UpdateStatusAsync(id, dto.Status);
+            var updated = await _service.UpdateStatusAsync(id, dto.Status, dto.RepairCost);
             return updated == null ? NotFound() : Ok(updated);
         }
         catch (InvalidOperationException ex)

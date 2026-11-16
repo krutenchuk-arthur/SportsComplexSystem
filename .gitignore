@@ -19,3 +19,5 @@ dist/
 CLAUDE.md
 .mcp.json
 init-git-history.ps1
+
+*.log

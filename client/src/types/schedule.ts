@@ -6,7 +6,8 @@ export type ConflictType =
   | 'WeeklyHoursExceeded'
   | 'EquipmentNotOperational'
   | 'OutsideWorkingHours'
-  | 'InvalidTimeRange';
+  | 'InvalidTimeRange'
+  | 'CapacityExceeded';
 
 export interface Conflict {
   type: ConflictType;
@@ -28,6 +29,10 @@ export interface ScheduleSlot {
   startTime: string;
   endTime: string;
   title: string;
+  /** Кількість записаних учасників */
+  bookedCount: number;
+  /** Максимальна місткість локації */
+  locationMaxCapacity: number;
   equipmentIds: number[];
   equipmentNames: string[];
 }
@@ -38,6 +43,7 @@ export interface ScheduleSlotCreateUpdate {
   startTime: string;
   endTime: string;
   title: string;
+  bookedCount: number;
   equipmentIds: number[];
 }
 

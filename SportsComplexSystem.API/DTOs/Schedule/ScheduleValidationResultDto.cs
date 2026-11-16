@@ -12,7 +12,8 @@ public enum ConflictType
     WeeklyHoursExceeded,
     EquipmentNotOperational,
     OutsideWorkingHours,
-    InvalidTimeRange
+    InvalidTimeRange,
+    CapacityExceeded
 }
 
 public class ConflictDto

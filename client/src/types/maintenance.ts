@@ -9,4 +9,6 @@ export interface MaintenanceTicket {
   description: string;
   createdAt: string;
   completedAt?: string | null;
+  /** Вартість ремонту, грн (заповнюється при закритті заявки) */
+  repairCost: number | null;
 }

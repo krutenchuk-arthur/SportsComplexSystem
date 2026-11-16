@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<MaintenanceTicket> MaintenanceTickets => Set<MaintenanceTicket>();
     public DbSet<User> Users => Set<User>();
     public DbSet<SystemSettings> SystemSettings => Set<SystemSettings>();
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -104,5 +105,18 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(u => u.TrainerId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        // Грошові поля: numeric(10,2) у PostgreSQL
+        modelBuilder.Entity<Trainer>()
+            .Property(t => t.HourlyRate)
+            .HasPrecision(10, 2);
+
+        modelBuilder.Entity<MaintenanceTicket>()
+            .Property(t => t.RepairCost)
+            .HasPrecision(10, 2);
+
+        // AuditLog: швидка вибірка останніх подій для стрічки аудиту
+        modelBuilder.Entity<AuditLog>()
+            .HasIndex(a => a.Timestamp);
     }
 }

@@ -32,11 +32,13 @@ public class ReportService : IReportService
     {
         var trainers = await _trainerService.GetAllWithWorkloadAsync();
         var sb = new StringBuilder();
-        AppendRow(sb, "ID", "ПІБ", "Спеціалізація", "Телефон", "Призначено, год", "Ліміт, год", "Завантаженість, %", "Статус");
+        AppendRow(sb, "ID", "ПІБ", "Спеціалізація", "Телефон", "Призначено, год", "Ліміт, год",
+            "Завантаженість, %", "Ставка, грн/год", "Нараховано, грн", "Статус");
         foreach (var t in trainers.OrderBy(t => t.FullName))
         {
             AppendRow(sb, t.Id.ToString(), t.FullName, t.Specialization.ToString(), t.PhoneNumber ?? "",
-                Num(t.AssignedHours), t.MaxWeeklyHours.ToString(), Num(t.LoadPercentage), t.LoadStatus.ToString());
+                Num(t.AssignedHours), t.MaxWeeklyHours.ToString(), Num(t.LoadPercentage),
+                Money(t.HourlyRate), Money((decimal)t.AssignedHours * t.HourlyRate), t.LoadStatus.ToString());
         }
         return Encode(sb);
     }
@@ -52,7 +54,8 @@ public class ReportService : IReportService
 
         var sb = new StringBuilder();
         AppendRow(sb, "Інв. номер", "Назва", "Локація", "Статус", "Напрацювання, год", "Поріг ТО, год",
-            "Знос, %", "Потребує уваги", "Заявка №", "Статус заявки", "Опис", "Створено", "Завершено");
+            "Знос, %", "Потребує уваги", "Заявка №", "Статус заявки", "Опис", "Створено", "Завершено",
+            "Вартість ремонту, грн");
 
         foreach (var e in equipment)
         {
@@ -66,7 +69,7 @@ public class ReportService : IReportService
             var tickets = e.MaintenanceTickets.OrderByDescending(t => t.CreatedAt).ToList();
             if (tickets.Count == 0)
             {
-                AppendRow(sb, baseCols.Concat(new[] { "", "", "", "", "" }).ToArray());
+                AppendRow(sb, baseCols.Concat(new[] { "", "", "", "", "", "" }).ToArray());
                 continue;
             }
             foreach (var t in tickets)
@@ -74,7 +77,8 @@ public class ReportService : IReportService
                 AppendRow(sb, baseCols.Concat(new[]
                 {
                     t.Id.ToString(), t.Status.ToString(), t.Description, Date(t.CreatedAt),
-                    t.CompletedAt.HasValue ? Date(t.CompletedAt.Value) : ""
+                    t.CompletedAt.HasValue ? Date(t.CompletedAt.Value) : "",
+                    t.RepairCost.HasValue ? Money(t.RepairCost.Value) : ""
                 }).ToArray());
             }
         }
@@ -82,6 +86,7 @@ public class ReportService : IReportService
     }
 
     private static string Num(double v) => v.ToString("0.##", CultureInfo.GetCultureInfo("uk-UA"));
+    private static string Money(decimal v) => v.ToString("0.##", CultureInfo.GetCultureInfo("uk-UA"));
     private static string Date(DateTime d) => d.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
     private static void AppendRow(StringBuilder sb, params string[] cols)

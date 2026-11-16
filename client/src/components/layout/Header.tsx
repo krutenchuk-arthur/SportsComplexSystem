@@ -1,6 +1,7 @@
 import { ChevronRight, LogOut, Menu, Moon, Search, Sun } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usePreferences } from '../../context/PreferencesContext';
+import { useRealtimeStatus } from '../../hooks/useRealtimeStatus';
 import type { UserRole } from '../../types/auth';
 import { tabLabel, type TabId } from './navigation';
 
@@ -25,6 +26,7 @@ interface HeaderProps {
 export default function Header({ activeTab, onOpenPalette, onOpenMobileNav }: HeaderProps) {
   const { user, settings, logout } = useAuth();
   const { theme, toggleTheme } = usePreferences();
+  const realtimeConnected = useRealtimeStatus();
   if (!user) return null;
 
   return (
@@ -64,6 +66,20 @@ export default function Header({ activeTab, onOpenPalette, onOpenMobileNav }: He
         <span className="hidden md:inline max-w-[150px] truncate text-sm text-zinc-700 dark:text-zinc-300">
           {user.fullName}
         </span>
+        <span
+          data-testid="realtime-status"
+          title={realtimeConnected ? 'Оновлення в реальному часі активні' : 'Немає з’єднання з хабом реального часу'}
+          className="hidden sm:flex items-center gap-1.5 px-1.5 py-0.5 rounded border border-zinc-200 dark:border-zinc-800 font-mono text-[10px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400"
+        >
+          <span
+            aria-hidden
+            className={`w-1.5 h-1.5 rounded-full ${
+              realtimeConnected ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-400 dark:bg-zinc-600'
+            }`}
+          />
+          {realtimeConnected ? 'Live' : 'Offline'}
+        </span>
+
         <span
           data-testid="role-badge"
           className={`px-1.5 py-0.5 rounded border font-mono text-[10px] font-semibold uppercase tracking-wider ${ROLE_BADGE[user.role]}`}

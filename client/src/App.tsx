@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import CommandPalette from './components/layout/CommandPalette';
@@ -9,8 +9,18 @@ import DashboardPage from './pages/DashboardPage';
 import StaffPage from './pages/StaffPage';
 import SchedulePage from './pages/SchedulePage';
 import InventoryPage from './pages/InventoryPage';
+import AuditPage from './pages/AuditPage';
 import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage';
+
+/** QR deep link: ?equipmentId=<id> (без react-router — навігація лишається state-based) */
+function readEquipmentDeepLink(): number | null {
+  if (typeof window === 'undefined') return null;
+  const raw = new URLSearchParams(window.location.search).get('equipmentId');
+  if (!raw) return null;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
 
 function App() {
   const { user, initializing } = useAuth();
@@ -18,16 +28,25 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [deepLinkEquipmentId, setDeepLinkEquipmentId] = useState<number | null>(readEquipmentDeepLink);
+  // Ref зберігає початковий deep link, щоб ефект не перезапускався після його «споживання»
+  const initialDeepLinkRef = useRef<number | null>(deepLinkEquipmentId);
 
   // При зміні користувача відкриваємо стартову вкладку його ролі
+  // (QR deep link має пріоритет — одразу веде в інвентар)
   useEffect(() => {
     if (user) {
-      setActiveTab(defaultTabForRole(user.role));
+      setActiveTab(initialDeepLinkRef.current ? 'inventory' : defaultTabForRole(user.role));
     } else {
       setPaletteOpen(false);
     }
     setMobileNavOpen(false);
   }, [user]);
+
+  const handleDeepLinkHandled = useCallback(() => {
+    initialDeepLinkRef.current = null;
+    setDeepLinkEquipmentId(null);
+  }, []);
 
   // Ctrl/Cmd + K — командна палітра
   useEffect(() => {
@@ -84,7 +103,13 @@ function App() {
             {tab === 'dashboard' && <DashboardPage />}
             {tab === 'staff' && <StaffPage />}
             {tab === 'schedule' && <SchedulePage />}
-            {tab === 'inventory' && <InventoryPage />}
+            {tab === 'inventory' && (
+              <InventoryPage
+                deepLinkEquipmentId={deepLinkEquipmentId}
+                onDeepLinkHandled={handleDeepLinkHandled}
+              />
+            )}
+            {tab === 'audit' && <AuditPage />}
             {tab === 'settings' && <SettingsPage />}
           </div>
         </main>

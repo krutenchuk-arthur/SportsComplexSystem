@@ -12,12 +12,14 @@ public class ScheduleService : IScheduleService
     private readonly AppDbContext _context;
     private readonly ITrainerService _trainerService;
     private readonly ISettingsService _settings;
+    private readonly IAuditService _audit;
 
-    public ScheduleService(AppDbContext context, ITrainerService trainerService, ISettingsService settings)
+    public ScheduleService(AppDbContext context, ITrainerService trainerService, ISettingsService settings, IAuditService audit)
     {
         _context = context;
         _trainerService = trainerService;
         _settings = settings;
+        _audit = audit;
     }
 
     public async Task<List<ScheduleSlotDto>> GetAllAsync(DateTime? from = null, DateTime? to = null, int? locationId = null, int? trainerId = null)
@@ -64,6 +66,8 @@ public class ScheduleService : IScheduleService
             StartTime = s.StartTime,
             EndTime = s.EndTime,
             Title = s.Title,
+            BookedCount = s.BookedCount,
+            LocationMaxCapacity = s.Location?.MaxCapacity ?? 0,
             EquipmentIds = s.Equipment.Select(e => e.Id).ToList(),
             EquipmentNames = s.Equipment.Select(e => e.Name).ToList()
         };
@@ -99,6 +103,31 @@ public class ScheduleService : IScheduleService
                     Type = ConflictType.OutsideWorkingHours,
                     Message = $"Заняття виходить за робочі години комплексу " +
                               $"({settings.WorkDayStartHour:00}:00–{settings.WorkDayEndHour:00}:00)."
+                });
+            }
+        }
+
+        // Правило 0.1: кількість записаних учасників у межах місткості локації
+        var location = await _context.Locations.FindAsync(dto.LocationId);
+        if (location != null)
+        {
+            if (dto.BookedCount < 0)
+            {
+                result.IsValid = false;
+                result.Conflicts.Add(new ConflictDto
+                {
+                    Type = ConflictType.CapacityExceeded,
+                    Message = "Кількість записаних учасників не може бути від'ємною."
+                });
+            }
+            else if (dto.BookedCount > location.MaxCapacity)
+            {
+                result.IsValid = false;
+                result.Conflicts.Add(new ConflictDto
+                {
+                    Type = ConflictType.CapacityExceeded,
+                    Message = $"Кількість записаних учасників ({dto.BookedCount}) перевищує місткість " +
+                              $"локації «{location.Name}» — максимум {location.MaxCapacity} місць."
                 });
             }
         }
@@ -204,7 +233,8 @@ public class ScheduleService : IScheduleService
             LocationId = dto.LocationId,
             StartTime = dto.StartTime,
             EndTime = dto.EndTime,
-            Title = dto.Title
+            Title = dto.Title,
+            BookedCount = dto.BookedCount
         };
 
         if (dto.EquipmentIds.Any())
@@ -225,6 +255,9 @@ public class ScheduleService : IScheduleService
         await _context.Entry(slot).Reference(s => s.Trainer).LoadAsync();
         await _context.Entry(slot).Reference(s => s.Location).LoadAsync();
         await _context.Entry(slot).Collection(s => s.Equipment).LoadAsync();
+
+        await _audit.RecordAsync("Створення заняття", "ScheduleSlot",
+            $"«{slot.Title}» · {slot.StartTime:dd.MM.yyyy HH:mm}–{slot.EndTime:HH:mm} · записано {slot.BookedCount}");
 
         return MapToDto(slot);
     }
@@ -247,6 +280,7 @@ public class ScheduleService : IScheduleService
         slot.StartTime = dto.StartTime;
         slot.EndTime = dto.EndTime;
         slot.Title = dto.Title;
+        slot.BookedCount = dto.BookedCount;
 
         slot.Equipment.Clear();
         if (dto.EquipmentIds.Any())
@@ -271,8 +305,12 @@ public class ScheduleService : IScheduleService
         var slot = await _context.ScheduleSlots.FindAsync(id);
         if (slot == null) return false;
 
+        var summary = $"«{slot.Title}» · {slot.StartTime:dd.MM.yyyy HH:mm}–{slot.EndTime:HH:mm}";
+
         _context.ScheduleSlots.Remove(slot);
         await _context.SaveChangesAsync();
+
+        await _audit.RecordAsync("Видалення заняття", "ScheduleSlot", summary);
         return true;
     }
 
@@ -307,6 +345,7 @@ public class ScheduleService : IScheduleService
                 TrainerId = source.TrainerId,
                 LocationId = source.LocationId,
                 Title = source.Title,
+                BookedCount = source.BookedCount,
                 StartTime = source.StartTime.AddDays(7),
                 EndTime = source.EndTime.AddDays(7),
                 EquipmentIds = source.Equipment.Select(e => e.Id).ToList()
@@ -330,6 +369,9 @@ public class ScheduleService : IScheduleService
                     $"«{source.Title}» ({source.StartTime:dd.MM.yyyy HH:mm}): {string.Join(" ", reasons)}");
             }
         }
+
+        await _audit.RecordAsync("Клонування тижня", "ScheduleSlot",
+            $"Тиждень з {weekStart:dd.MM.yyyy}: скопійовано {result.CopiedCount}, пропущено {result.SkippedCount}");
 
         return result;
     }

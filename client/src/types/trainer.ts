@@ -5,6 +5,8 @@ export interface Trainer {
   fullName: string;
   specialization: SpecializationType;
   maxWeeklyHours: number;
+  /** Погодинна ставка, грн/год */
+  hourlyRate: number;
   phoneNumber?: string | null;
   assignedHours: number;
   loadPercentage: number;
@@ -15,6 +17,7 @@ export interface TrainerCreateUpdate {
   fullName: string;
   specialization: SpecializationType;
   maxWeeklyHours: number;
+  hourlyRate: number;
   phoneNumber?: string | null;
 }
 

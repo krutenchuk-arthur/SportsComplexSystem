@@ -4,6 +4,7 @@ import PageHeader from '../components/layout/PageHeader';
 import KpiGrid from '../components/dashboard/KpiGrid';
 import WorkloadOverview from '../components/dashboard/WorkloadOverview';
 import AlertsFeed from '../components/dashboard/AlertsFeed';
+import AuditFeed from '../components/dashboard/AuditFeed';
 import KpiCard from '../components/common/KpiCard';
 import SkeletonCard from '../components/common/SkeletonCard';
 import ProgressBar from '../components/common/ProgressBar';
@@ -11,14 +12,21 @@ import StatusBadge from '../components/common/StatusBadge';
 import { useDashboard } from '../hooks/useDashboard';
 import { useTrainers } from '../hooks/useTrainers';
 import { useSchedule } from '../hooks/useSchedule';
+import { useRealtimeUpdates } from '../hooks/useRealtimeUpdates';
 import { useAuth } from '../context/AuthContext';
 import { loadStatusToLevel } from '../utils/statusColors';
 import { formatDateTime, formatTime } from '../utils/formatters';
 
 function TrainerDashboard() {
   const { user } = useAuth();
-  const { trainers, loading: trainersLoading } = useTrainers();
-  const { slots, loading: slotsLoading } = useSchedule();
+  const { trainers, loading: trainersLoading, refresh: refreshTrainers } = useTrainers();
+  const { slots, loading: slotsLoading, refresh: refreshSlots } = useSchedule();
+
+  // Живі оновлення: години та найближчі тренування оновлюються без перезавантаження
+  useRealtimeUpdates(() => {
+    void refreshTrainers();
+    void refreshSlots();
+  });
 
   const me = trainers.find((t) => t.id === user?.trainerId) ?? null;
   const upcoming = useMemo(() => {
@@ -96,8 +104,16 @@ function TrainerDashboard() {
 }
 
 function OperationsDashboard() {
-  const { kpi, alerts, loading: dashboardLoading } = useDashboard();
-  const { trainers, loading: trainersLoading } = useTrainers();
+  const { kpi, alerts, loading: dashboardLoading, refresh: refreshDashboard } = useDashboard();
+  const { trainers, loading: trainersLoading, refresh: refreshTrainers } = useTrainers();
+  const { hasRole } = useAuth();
+  const isAdmin = hasRole('Admin');
+
+  // Живі оновлення KPI-карток (у т.ч. фонд оплати та витрати на ТО) і завантаженості
+  useRealtimeUpdates(() => {
+    void refreshDashboard();
+    void refreshTrainers();
+  });
 
   return (
     <div className="flex flex-1 flex-col gap-6 min-h-0">
@@ -112,6 +128,7 @@ function OperationsDashboard() {
           <AlertsFeed alerts={alerts} loading={dashboardLoading} />
         </div>
       </div>
+      {isAdmin && <AuditFeed limit={12} />}
     </div>
   );
 }

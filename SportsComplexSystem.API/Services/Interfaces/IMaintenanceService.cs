@@ -19,5 +19,5 @@ public interface IMaintenanceService
     /// При InProgress обладнання переходить у UnderRepair.
     /// При Completed - лічильник годин скидається на 0, обладнання повертається в Operational.
     /// </summary>
-    Task<MaintenanceTicketDto?> UpdateStatusAsync(int id, TicketStatus newStatus);
+    Task<MaintenanceTicketDto?> UpdateStatusAsync(int id, TicketStatus newStatus, decimal? repairCost = null);
 }

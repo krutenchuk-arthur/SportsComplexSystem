@@ -1,7 +1,7 @@
-import { LayoutDashboard, Users, CalendarClock, Dumbbell, Settings, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarClock, Dumbbell, ScrollText, Settings, type LucideIcon } from 'lucide-react';
 import type { UserRole } from '../../types/auth';
 
-export type TabId = 'dashboard' | 'staff' | 'schedule' | 'inventory' | 'settings';
+export type TabId = 'dashboard' | 'staff' | 'schedule' | 'inventory' | 'audit' | 'settings';
 
 export interface NavItem {
   id: TabId;
@@ -16,7 +16,8 @@ export const NAV_ITEMS: NavItem[] = [
   { id: 'staff', label: 'Персонал', icon: Users, code: '02', roles: ['Admin'] },
   { id: 'schedule', label: 'Розклад', icon: CalendarClock, code: '03', roles: ['Admin', 'Trainer', 'Technician'] },
   { id: 'inventory', label: 'Інвентар і ТО', icon: Dumbbell, code: '04', roles: ['Admin', 'Trainer', 'Technician'] },
-  { id: 'settings', label: 'Налаштування', icon: Settings, code: '05', roles: ['Admin', 'Trainer', 'Technician'] },
+  { id: 'audit', label: 'Журнал аудиту', icon: ScrollText, code: '05', roles: ['Admin'] },
+  { id: 'settings', label: 'Налаштування', icon: Settings, code: '06', roles: ['Admin', 'Trainer', 'Technician'] },
 ];
 
 export function navItemsForRole(role: UserRole): NavItem[] {

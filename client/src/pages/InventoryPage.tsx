@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Dumbbell, Wrench, AlertOctagon } from 'lucide-react';
 import PageHeader from '../components/layout/PageHeader';
 import EquipmentTable from '../components/inventory/EquipmentTable';
 import EquipmentFormModal from '../components/inventory/EquipmentFormModal';
 import AddUsageHoursModal from '../components/inventory/AddUsageHoursModal';
+import EquipmentPassportModal from '../components/inventory/EquipmentPassportModal';
 import MaintenanceKanban from '../components/inventory/MaintenanceKanban';
 import SkeletonTable from '../components/common/SkeletonTable';
 import ReportIssueModal from '../components/inventory/ReportIssueModal';
@@ -12,12 +13,20 @@ import { useAuth } from '../context/AuthContext';
 import { useEquipment } from '../hooks/useEquipment';
 import { useMaintenance } from '../hooks/useMaintenance';
 import { useLocations } from '../hooks/useLocations';
+import { useRealtimeUpdates } from '../hooks/useRealtimeUpdates';
 import { EQUIPMENT_STATUS_LABELS, type EquipmentStatus, type TicketStatus } from '../types/enums';
 import type { Equipment, EquipmentCreateUpdate } from '../types/equipment';
 
 type InventoryTab = 'equipment' | 'maintenance';
 
-export default function InventoryPage() {
+interface InventoryPageProps {
+  /** Глибоке посилання з QR: ?equipmentId=<id> — одразу відкриває паспорт */
+  deepLinkEquipmentId?: number | null;
+  /** Викликається після обробки deep-link, щоб прибрати параметр зі стану App */
+  onDeepLinkHandled?: () => void;
+}
+
+export default function InventoryPage({ deepLinkEquipmentId = null, onDeepLinkHandled }: InventoryPageProps) {
   const { equipment, loading, createEquipment, updateEquipment, deleteEquipment, addUsageHours, refresh: refreshEquipment } = useEquipment();
   const { tickets, loading: ticketsLoading, updateStatus, refresh: refreshTickets } = useMaintenance();
   const { hasRole } = useAuth();
@@ -33,6 +42,23 @@ export default function InventoryPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Equipment | null>(null);
   const [usageItem, setUsageItem] = useState<Equipment | null>(null);
+  const [passportItem, setPassportItem] = useState<Equipment | null>(null);
+
+  // Живі оновлення: інвентар і заявки ТО перезавантажуються на подію DataChanged
+  useRealtimeUpdates(() => {
+    void refreshEquipment();
+    void refreshTickets();
+  });
+
+  // QR deep link: ?equipmentId=<id> → вкладка «Обладнання» + паспорт у модалці
+  useEffect(() => {
+    if (!deepLinkEquipmentId || equipment.length === 0) return;
+    const target = equipment.find((item) => item.id === deepLinkEquipmentId);
+    onDeepLinkHandled?.();
+    if (!target) return;
+    setActiveTab('equipment');
+    setPassportItem(target);
+  }, [deepLinkEquipmentId, equipment, onDeepLinkHandled]);
 
   const visibleEquipment = equipment.filter(
     (e) =>
@@ -48,11 +74,12 @@ export default function InventoryPage() {
     }
   };
 
-  const handleUpdateTicketStatus = async (id: number, status: TicketStatus) => {
-    await updateStatus(id, status);
+  const handleUpdateTicketStatus = async (id: number, status: TicketStatus, repairCost?: number | null) => {
+    await updateStatus(id, status, repairCost);
     // статус обладнання змінюється на бекенді (UnderRepair / Operational, лічильник скидається)
     await refreshEquipment();
   };
+
 
   return (
     <div>
@@ -150,6 +177,10 @@ export default function InventoryPage() {
                 if (confirm('Видалити обладнання?')) await deleteEquipment(id);
               } : undefined}
               onAddUsage={canService ? setUsageItem : undefined}
+              onOpenPassport={(item) => {
+                setActiveTab('equipment');
+                setPassportItem(item);
+              }}
             />
           )}
         </>
@@ -186,6 +217,12 @@ export default function InventoryPage() {
         onClose={() => setUsageItem(null)}
         onSubmit={addUsageHours}
         equipment={usageItem}
+      />
+
+      <EquipmentPassportModal
+        isOpen={passportItem !== null}
+        onClose={() => setPassportItem(null)}
+        equipment={passportItem}
       />
     </div>
   );
