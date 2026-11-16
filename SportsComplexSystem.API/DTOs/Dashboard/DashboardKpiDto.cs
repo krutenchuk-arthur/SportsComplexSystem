@@ -14,4 +14,14 @@ public class DashboardKpiDto
     public int EquipmentOnMaintenance { get; set; }
 
     public int OpenTicketsCount { get; set; }
+
+    /// <summary>
+    /// Прогноз фонду оплати праці на поточний тиждень: Σ(AssignedHours × HourlyRate), грн.
+    /// </summary>
+    public decimal WeeklyPayrollEstimate { get; set; }
+
+    /// <summary>
+    /// Сумарна вартість виконаних ремонтів за всіма заявками ТО, грн.
+    /// </summary>
+    public decimal TotalMaintenanceCost { get; set; }
 }

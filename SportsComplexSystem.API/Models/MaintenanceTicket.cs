@@ -19,4 +19,9 @@ public class MaintenanceTicket
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public DateTime? CompletedAt { get; set; }
+
+    /// <summary>
+    /// Вартість виконаного ремонту, грн (заповнюється при закритті заявки).
+    /// </summary>
+    public decimal? RepairCost { get; set; }
 }

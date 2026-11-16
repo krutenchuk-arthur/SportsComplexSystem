@@ -10,6 +10,17 @@ public class ScheduleSlotDto
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public string Title { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Кількість записаних учасників.
+    /// </summary>
+    public int BookedCount { get; set; }
+
+    /// <summary>
+    /// Максимальна місткість локації (для відображення «записані / місткість»).
+    /// </summary>
+    public int LocationMaxCapacity { get; set; }
+
     public List<int> EquipmentIds { get; set; } = new();
     public List<string> EquipmentNames { get; set; } = new();
 }

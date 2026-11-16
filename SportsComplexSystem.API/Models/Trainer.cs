@@ -19,6 +19,11 @@ public class Trainer
     public int MaxWeeklyHours { get; set; } = 40;
     
     public string? PhoneNumber { get; set; }
+
+    /// <summary>
+    /// Погодинна ставка тренера, грн/год (використовується для прогнозу ФОП).
+    /// </summary>
+    public decimal HourlyRate { get; set; } = 450m;
     
     // Navigation
     public ICollection<ScheduleSlot> ScheduleSlots { get; set; } = new List<ScheduleSlot>();

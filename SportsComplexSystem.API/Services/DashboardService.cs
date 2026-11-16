@@ -38,13 +38,20 @@ public class DashboardService : IDashboardService
         var openTicketsCount = await _context.MaintenanceTickets
             .CountAsync(t => t.Status == TicketStatus.Open);
 
+        // Фінансові KPI: прогноз ФОП на тиждень та сумарна вартість ремонтів
+        var weeklyPayrollEstimate = trainers.Sum(t => (decimal)t.AssignedHours * t.HourlyRate);
+        var totalMaintenanceCost = await _context.MaintenanceTickets
+            .SumAsync(t => t.RepairCost ?? 0m);
+
         return new DashboardKpiDto
         {
             OverallLoadPercentage = overallLoad,
             ActiveTrainingsToday = activeTrainingsToday,
             EquipmentInService = equipmentInService,
             EquipmentOnMaintenance = equipmentOnMaintenance,
-            OpenTicketsCount = openTicketsCount
+            OpenTicketsCount = openTicketsCount,
+            WeeklyPayrollEstimate = weeklyPayrollEstimate,
+            TotalMaintenanceCost = totalMaintenanceCost
         };
     }
 

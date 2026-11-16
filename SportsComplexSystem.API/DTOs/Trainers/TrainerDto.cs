@@ -14,6 +14,11 @@ public class TrainerDto
     public string? PhoneNumber { get; set; }
 
     /// <summary>
+    /// Погодинна ставка тренера, грн/год.
+    /// </summary>
+    public decimal HourlyRate { get; set; }
+
+    /// <summary>
     /// Фактично призначені години за поточний тиждень (обчислюється сервісом).
     /// </summary>
     public double AssignedHours { get; set; }

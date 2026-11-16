@@ -54,7 +54,8 @@ public class TrainerService : ITrainerService
             FullName = dto.FullName,
             Specialization = dto.Specialization,
             MaxWeeklyHours = maxWeeklyHours,
-            PhoneNumber = dto.PhoneNumber
+            PhoneNumber = dto.PhoneNumber,
+            HourlyRate = dto.HourlyRate > 0 ? dto.HourlyRate : 450m
         };
 
         _context.Trainers.Add(trainer);
@@ -72,6 +73,7 @@ public class TrainerService : ITrainerService
         trainer.Specialization = dto.Specialization;
         trainer.MaxWeeklyHours = dto.MaxWeeklyHours > 0 ? dto.MaxWeeklyHours : trainer.MaxWeeklyHours;
         trainer.PhoneNumber = dto.PhoneNumber;
+        if (dto.HourlyRate > 0) trainer.HourlyRate = dto.HourlyRate;
 
         await _context.SaveChangesAsync();
 
@@ -200,6 +202,7 @@ public class TrainerService : ITrainerService
             Specialization = trainer.Specialization,
             MaxWeeklyHours = trainer.MaxWeeklyHours,
             PhoneNumber = trainer.PhoneNumber,
+            HourlyRate = trainer.HourlyRate,
             AssignedHours = assignedHours,
             LoadPercentage = loadPercentage,
             LoadStatus = loadStatus

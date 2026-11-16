@@ -17,7 +17,7 @@ public class LocationService : ILocationService
     public async Task<List<LocationDto>> GetAllAsync()
     {
         return await _context.Locations
-            .Select(l => new LocationDto { Id = l.Id, Name = l.Name, Type = l.Type })
+            .Select(l => new LocationDto { Id = l.Id, Name = l.Name, Type = l.Type, MaxCapacity = l.MaxCapacity })
             .ToListAsync();
     }
 
@@ -26,6 +26,6 @@ public class LocationService : ILocationService
         var location = await _context.Locations.FindAsync(id);
         if (location == null) return null;
 
-        return new LocationDto { Id = location.Id, Name = location.Name, Type = location.Type };
+        return new LocationDto { Id = location.Id, Name = location.Name, Type = location.Type, MaxCapacity = location.MaxCapacity };
     }
 }

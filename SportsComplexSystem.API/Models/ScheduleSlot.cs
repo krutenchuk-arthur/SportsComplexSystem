@@ -17,6 +17,11 @@ public class ScheduleSlot
     public DateTime EndTime { get; set; }
     
     public required string Title { get; set; }
+
+    /// <summary>
+    /// Кількість записаних учасників (не може перевищувати Location.MaxCapacity).
+    /// </summary>
+    public int BookedCount { get; set; } = 0;
     
     // Many-to-many з Equipment (implicit join table в EF Core 8)
     public ICollection<Equipment> Equipment { get; set; } = new List<Equipment>();

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportsComplexSystem.API.Data;
+using SportsComplexSystem.API.Hubs;
 using SportsComplexSystem.API.Models;
 using SportsComplexSystem.API.Services;
 using SportsComplexSystem.API.Services.Interfaces;
@@ -29,8 +30,13 @@ builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+
+// SignalR (real-time оновлення) + доступ до HttpContext для журналу аудиту
+builder.Services.AddSignalR();
+builder.Services.AddHttpContextAccessor();
 
 // JWT Bearer автентифікація
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -54,6 +60,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             RoleClaimType = ClaimTypes.Role,
             NameClaimType = ClaimTypes.Name
         };
+
+        // SignalR передає JWT через query string (WebSocket не підтримує заголовки)
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                if (!string.IsNullOrEmpty(accessToken) &&
+                    context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
     });
 builder.Services.AddAuthorization();
 
@@ -72,6 +94,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5209", "http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod()
+              .AllowCredentials()
               .WithExposedHeaders("Content-Disposition");
     });
 });
@@ -114,6 +137,7 @@ app.UseCors("ClientApp");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<ComplexHub>("/hubs/complex");
 
 app.Run();
 

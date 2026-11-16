@@ -12,6 +12,11 @@ public class Location
     public required string Name { get; set; }
     
     public LocationType Type { get; set; }
+
+    /// <summary>
+    /// Максимальна місткість зали (кількість місць для занять).
+    /// </summary>
+    public int MaxCapacity { get; set; } = 15;
     
     // Navigation
     public ICollection<ScheduleSlot> ScheduleSlots { get; set; } = new List<ScheduleSlot>();
