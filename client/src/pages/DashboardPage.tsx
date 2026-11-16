@@ -38,7 +38,7 @@ function TrainerDashboard() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-1 flex-col gap-6 min-h-0">
       {trainersLoading || !me ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}
@@ -51,8 +51,8 @@ function TrainerDashboard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
-        <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-5">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 flex-1 min-h-0">
+        <section className="h-full flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Тижневе навантаження</h3>
             {me && <StatusBadge label={me.loadStatus} level={loadStatusToLevel(me.loadStatus)} />}
@@ -64,7 +64,7 @@ function TrainerDashboard() {
           )}
         </section>
 
-        <section className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
+        <section className="h-full flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg">
           <h3 className="px-4 sm:px-5 py-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100 border-b border-zinc-200 dark:border-zinc-800">
             Найближчі тренування
           </h3>
@@ -75,7 +75,7 @@ function TrainerDashboard() {
           ) : upcoming.length === 0 ? (
             <p className="p-4 sm:p-5 text-sm text-zinc-500">Запланованих занять немає.</p>
           ) : (
-            <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
+            <ul className="divide-y divide-zinc-200 dark:divide-zinc-800 xl:flex-1 xl:min-h-0 xl:overflow-y-auto">
               {upcoming.map((s) => (
                 <li key={s.id} className="px-4 sm:px-5 py-3 flex items-center justify-between gap-3">
                   <div className="min-w-0">
@@ -100,14 +100,15 @@ function OperationsDashboard() {
   const { trainers, loading: trainersLoading } = useTrainers();
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-1 flex-col gap-6 min-h-0">
       <KpiGrid kpi={kpi} loading={dashboardLoading} />
-      {/* 12-колонкова сітка: 7 колонок навантаження персоналу + 5 колонок сповіщень */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-        <div className="xl:col-span-7">
+      {/* 12-колонкова сітка: 7 колонок навантаження персоналу + 5 колонок сповіщень.
+          flex-1 + h-full на картках заповнюють вільну висоту екрана на великих моніторах. */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 flex-1 min-h-0">
+        <div className="xl:col-span-7 min-h-0">
           <WorkloadOverview trainers={trainers} loading={trainersLoading} />
         </div>
-        <div className="xl:col-span-5">
+        <div className="xl:col-span-5 min-h-0">
           <AlertsFeed alerts={alerts} loading={dashboardLoading} />
         </div>
       </div>
@@ -120,7 +121,7 @@ export default function DashboardPage() {
   const isTrainer = hasRole('Trainer');
 
   return (
-    <div>
+    <div className="flex flex-col flex-1 min-h-0">
       <PageHeader
         title={isTrainer ? 'Мій дашборд' : 'Аналітичний дашборд'}
         subtitle={

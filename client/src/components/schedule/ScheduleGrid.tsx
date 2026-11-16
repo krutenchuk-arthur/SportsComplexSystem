@@ -103,10 +103,10 @@ export default function ScheduleGrid({
   };
 
   return (
-    <div className="w-full overflow-x-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3 md:min-w-[840px]">
+    <div className="w-full overflow-x-auto flex-1 min-h-0 flex flex-col">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-7 gap-3 md:min-w-[840px] flex-1">
       {days.map((day, idx) => (
-        <div key={idx} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 min-h-[200px]">
+        <div key={idx} className="h-full flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 min-h-[200px]">
           <div className="flex items-baseline justify-between mb-3 pb-2 border-b border-zinc-200 dark:border-zinc-800">
             <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 capitalize">
               {format(day, 'EEEEEE', { locale: uk })}
@@ -124,7 +124,7 @@ export default function ScheduleGrid({
             </div>
           )}
 
-          <div className="space-y-2">
+          <div className="space-y-2 xl:flex-1 xl:min-h-0 xl:overflow-y-auto">
             {timelineByDay[idx].length === 0 && (
               <p className="text-xs text-zinc-400 dark:text-zinc-600 text-center py-4">Немає занять</p>
             )}
